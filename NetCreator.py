@@ -9,7 +9,7 @@ import time
 from numpy.random import choice
 from enum import Enum
 
-import operators, platforms, generator
+import operators, platforms, FSM
 
 
 
@@ -25,11 +25,26 @@ def getHeads(G):
 
 def chooseFSM(paradigm='linear'):  
     d = {
-        'batch': generator.batchFSM,
-        'streaming': generator.streamFSM,
-        'linear': generator.linearFSM
+        'batch': FSM.batchFSM,
+        'streaming': FSM.streamFSM,
+        'linear': FSM.linearFSM
     }
     return d[paradigm]
+
+def PathNet(paradigm, platform, loop=0, size='small'):
+    fsm = chooseFSM(paradigm)
+    pipeline = fsm(with_source=False, with_sink=False, loop=loop)['opts']
+    G = nx.DiGraph()
+    for opt in pipeline:
+        G.add_node(opt, paradigm=paradigm, platform=platform)
+    for i in range(0, len(pipeline)-1):
+        G.add_edge(pipeline[i], pipeline[i+1])
+        
+    return {
+        'graph': G,
+        'head': [pipeline[0]],
+        'tail': [pipeline[-1]],
+    }
 
 def UpForkNet(paradigm, platform, size='small', left=None, right=None, junc = None, loop=0):
     '''
@@ -58,22 +73,7 @@ def UpForkNet(paradigm, platform, size='small', left=None, right=None, junc = No
         'tail': [junc]
     }
 
-def PathNet(paradigm, platform, loop=0, size='small'):
-    fsm = chooseFSM(paradigm)
-    pipeline = fsm(with_source=False, with_sink=False, loop=loop)['opts']
-    G = nx.DiGraph()
-    for opt in pipeline:
-        G.add_node(opt, paradigm=paradigm, platform=platform)
-    for i in range(0, len(pipeline)-1):
-        G.add_edge(pipeline[i], pipeline[i+1])
-        # if(len(list(nx.simple_cycles(G))) > 0):
-        #     print('#######  Circle!  ########', 'PathNet', pipeline[i].name, ' -> ' , pipeline[i+1].name)
-    
-    return {
-        'graph': G,
-        'head': [pipeline[0]],
-        'tail': [pipeline[-1]],
-    }
+
 
 def DownForkNet(paradigm, platform, left=None, right=None, junc = None, loop=0, size='small'):
     '''
