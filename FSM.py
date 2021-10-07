@@ -416,11 +416,3 @@ if __name__ == '__main__':
     
 
 
-
-# for _ in range(1, 30): # 生成30个 [500,3000) 随机大小的workflow
-#     res = generateStreamingPipeline(random.randint(500, 3000), ['storm', 'flink', 'samza', 'sparkstreaming'])['plt_vec']
-#     if not set(res).issubset(tmp):
-#         print(1)
-#         break
-#     sentences.append(res)
-
