@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os.path as osp
 import os
 import argparse
@@ -19,7 +20,7 @@ import MyGCN, NetDataSet
 
 logger = logging.Logger('training logger')
 logger.setLevel(10)
-model_path = os.path.join(os.getcwd(), 'gcn.pt') 
+model_path = os.path.join(os.getcwd(),'data', 'gcn.pt') 
 data_folder_path = os.path.join(os.getcwd(), 'data', 'Logical Plans') 
 
 # if utils.is_main_process():

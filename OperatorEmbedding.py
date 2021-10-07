@@ -32,7 +32,9 @@ def getModel(path):
                 print("正在加载 {} 类型的数据".format(paradigm))
                 count = 0
                 for plan in plans:
-                    g = nx.read_gpickle(osp.join(pp, plan))
+                    graph_path = osp.join(pp, plan)
+                    print(graph_path)
+                    g = nx.read_gpickle(graph_path)
                     l = list(nx.topological_sort(g))
                     sentence = [o.name for o in l]
                     sentences.append(sentence)

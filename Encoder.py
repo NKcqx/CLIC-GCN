@@ -10,10 +10,10 @@ class OperatorEncoder:
 
     def __init__(self) -> None:
         self.label_encoder = preprocessing.LabelEncoder()
-        self.label_encoder.fit([o.name for o in operators.all_opt])
+        self.label_encoder.fit([o.name for o in operators.all_opts])
 
         self.onehot_encoder = preprocessing.OneHotEncoder(sparse=False)
-        self.onehot_encoder.fit([[o.name] for o in operators.all_opt])
+        self.onehot_encoder.fit([[o.name] for o in operators.all_opts])
         p = os.path.join(os.getcwd(), 'data', 'operator_embedding.ebd') 
         self.embedding_model = OperatorEmbedding.getModel(p)
 

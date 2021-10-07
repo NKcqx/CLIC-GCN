@@ -1,7 +1,16 @@
 # 基于 GCN 的平台选择器
 
 # QuickStart
+一、合成训练数据
+```console
+foo@bar:CLIC-GCN$ python NetCreator.py batch local 10
+```
+参数解释：`python NetCreator.py [paradigm] [scale] [amount]`
+`paradigm`: 合成的 Logical Plan 的计算模式，str 类型，可选项: [‘batch’, 'linear', 'streaming']
+`scale`: 数据规模，str 类型，可选项: ['local', 'small', 'medium', 'large']
+`amount`: 合成的数据量，int 类型
 
+二、训练 GCN 模型
 ```console
 foo@bar:CLIC-GCN$ python train.py
 ```
