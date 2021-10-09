@@ -155,11 +155,11 @@ def completeNet(Net=None, concat_head='*', concat_tail='*', level=1, paradigm='*
             'medium': [0.5, 0.3, 0.2],
             'large': [0.5, 0.25, 0.25]
         }
-    if(concat_head is not None):
+    if(concat_head != None):
         heads = Net['head'] if concat_head == '*' else concat_head
 
         for h in heads:
-            if(h.num_input is not 0 and  h.num_output is not 0):
+            if(h.num_input != 0 and  h.num_output != 0):
                 Net['head'].remove(h) # 这个h将要被替换为新网络的head，所以先删除它
                 N = choice([SourceNet, PathNet, UpForkNet], p=p[size])
                 subNet = N(paradigm, platform, loop=loop)
@@ -169,7 +169,7 @@ def completeNet(Net=None, concat_head='*', concat_tail='*', level=1, paradigm='*
                 if (N != SourceNet):
                     Net = completeNet(Net, subNet['head'], None, level=level+1, size=size)
 
-    if(concat_tail is not None):
+    if(concat_tail != None):
         tails = Net['tail'] if concat_tail == '*' else concat_tail
         for t in tails:
             Net['tail'].remove(t) # 这个t将要被替换为新网络的tail，所以先删除它

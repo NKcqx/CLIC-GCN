@@ -11,9 +11,10 @@ from torch import utils
 import torch.nn.functional as F
 import torch_geometric.transforms as T
 
-from torch_geometric.nn import GCNConv, ChebConv
-from sklearn.preprocessing import LabelEncoder
-from torch_geometric.data import InMemoryDataset, Data, DataLoader,Dataset
+
+
+from sklearn import metrics
+from torch_geometric.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 
 import MyGCN, NetDataSet
@@ -24,15 +25,15 @@ model_path = os.path.join(os.getcwd(),'data', 'gcn.pt')
 data_folder_path = os.path.join(os.getcwd(), 'data', 'Logical Plans') 
 
 # if utils.is_main_process():
-writer = SummaryWriter(os.path.join(os.getcwd(), 'log/10.4_emb_1024') )
+writer = SummaryWriter(os.path.join(os.getcwd(), 'log/10.9_emb_512gcn_4096') )
 
 
 
 batch_size = 4
 train_val_ratio = 0.8
-learning_rate = 0.01
-num_epoch = 1024
-embedding_size = 16 # GCN 中的 embedding 大小，非 operator embedding
+learning_rate = 0.0001
+num_epoch = 4096
+embedding_size = 512 # GCN 中的 embedding 大小，非 operator embedding
 dataset = NetDataSet.NetDataset(data_folder_path)
 dataset = dataset.shuffle()
 
@@ -49,7 +50,7 @@ logger.info('训练数据集大小：', len(dataset))
 train_dataset = dataset
 train_loader = DataLoader(train_dataset, batch_size=batch_size)
 
-device = torch.device('cpu')
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = model.to(device)
 
 optimizer = torch.optim.Adam([
@@ -67,6 +68,7 @@ def train():
         output = model(data)
         label = data.y.to(device)
         loss = F.nll_loss(output, label)
+        # auc_roc = metrics.roc_auc_score(output, label, multi_class='ovr')
         loss.backward()
         loss_all += data.num_graphs * loss.item()
         optimizer.step()
@@ -78,7 +80,7 @@ for epoch in range(num_epoch):
     print('Epoch:{}, Loss:{}'.format(epoch, loss))
     writer.add_scalar('train_loss', loss, epoch)
 
-# if utils.is_main_process():
+
 writer.close()
 
 torch.save(model.state_dict(), model_path)

@@ -33,7 +33,7 @@ def getModel(path):
                 count = 0
                 for plan in plans:
                     graph_path = osp.join(pp, plan)
-                    print(graph_path)
+                    # print(graph_path)
                     g = nx.read_gpickle(graph_path)
                     l = list(nx.topological_sort(g))
                     sentence = [o.name for o in l]
