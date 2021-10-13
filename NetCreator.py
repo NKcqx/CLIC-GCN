@@ -195,10 +195,21 @@ def create():
     paradigm= args.paradigm[0]
     size= args.size[0]
     amount = args.amount[0]
+    if(paradigm =='linear'):
+
+        loop = {
+            "local": 0,
+            "small": random.randint(0, 100),
+            "medium": random.randint(10, 1000),
+            "large": random.randint(100, 10000)
+        }[size]
+    else:
+        loop = 0
+
     t = time.strftime("%Y-%m-%d", time.localtime())
     path = osp.join(os.getcwd(), 'data', 'Logical Plans', 'generated', paradigm, t+'_'+size)
     for id in range(amount):
-            G = completeNet()['graph']
+            G = completeNet(paradigm=paradigm, size=size, loop=loop)['graph']
             nx.write_gpickle(G, path+'_'+str(id))
 
 

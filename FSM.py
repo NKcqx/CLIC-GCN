@@ -90,8 +90,6 @@ class BatchFSM(FSM):
     def getRandomOpt(self, statement = lambda x : True):
         return super(BatchFSM, self).getRandomOpt(operators.opts_with_paradigm['batch'], statement)
     
-
-
     def produce(self, scale ='local', platform='*', **args):
         if(platform == '*'):
             plts = [p for p in self.supportedPltNOpt()[1] if scale in p.scale] 

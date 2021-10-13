@@ -25,11 +25,11 @@ model_path = os.path.join(os.getcwd(),'data', 'gcn.pt')
 data_folder_path = os.path.join(os.getcwd(), 'data', 'Logical Plans') 
 
 # if utils.is_main_process():
-writer = SummaryWriter(os.path.join(os.getcwd(), 'log/10.9_emb_512gcn_4096') )
+writer = SummaryWriter(os.path.join(os.getcwd(), 'log/10.13_16emb_512gcn_4096epoch') )
 
 
 
-batch_size = 4
+batch_size = 16
 train_val_ratio = 0.8
 learning_rate = 0.0001
 num_epoch = 4096
