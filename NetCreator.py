@@ -161,24 +161,27 @@ def completeNet(Net=None, concat_head='*', concat_tail='*', level=1, paradigm='*
         for h in heads:
             if(h.num_input != 0 and  h.num_output != 0):
                 Net['head'].remove(h) # 这个h将要被替换为新网络的head，所以先删除它
+                sub_platform = random.choice(list(platforms.plts_with_paradigm[paradigm]))
                 N = choice([SourceNet, PathNet, UpForkNet], p=p[size])
-                subNet = N(paradigm, platform, loop=loop)
+                subNet = N(paradigm=paradigm,platform=sub_platform, loop=loop)
                 
                 Net['graph'] = JoinNetworks(subNet['graph'], Net['graph'], subNet['tail'][0], h)
                 Net['head'].extend(subNet['head'])
                 if (N != SourceNet):
-                    Net = completeNet(Net, subNet['head'], None, level=level+1, size=size)
+                    Net = completeNet(Net, concat_head=subNet['head'],concat_tail=None, level=level+1, size=size)
 
     if(concat_tail != None):
         tails = Net['tail'] if concat_tail == '*' else concat_tail
         for t in tails:
             Net['tail'].remove(t) # 这个t将要被替换为新网络的tail，所以先删除它
+            sub_platform = random.choice(list(platforms.plts_with_paradigm[paradigm]))
             N = choice([ActionNet, PathNet, DownForkNet], p=p[size])
-            subNet = N(paradigm, platform, loop=loop)
+            subNet = N(paradigm=paradigm,platform=sub_platform, loop=loop)
+
             Net['graph'] = JoinNetworks(Net['graph'], subNet['graph'], t, subNet['head'][0])
             Net['tail'].extend(subNet['tail'])
             if (N != ActionNet):
-                Net = completeNet(Net, None, subNet['tail'], level=level+1, size=size)
+                Net = completeNet(Net, concat_head=None,concat_tail=subNet['tail'], level=level+1, size=size)
     return Net
 
 def create():
@@ -209,8 +212,8 @@ def create():
     t = time.strftime("%Y-%m-%d", time.localtime())
     path = osp.join(os.getcwd(), 'data', 'Logical Plans', 'generated', paradigm, t+'_'+size)
     for id in range(amount):
-            G = completeNet(paradigm=paradigm, size=size, loop=loop)['graph']
-            nx.write_gpickle(G, path+'_'+str(id))
+        G = completeNet(paradigm=paradigm, size=size, loop=loop)['graph']
+        nx.write_gpickle(G, path+'_'+str(id))
 
 
 def sample():
