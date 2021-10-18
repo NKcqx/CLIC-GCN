@@ -6,13 +6,12 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import os
 import os.path as osp
-
+import argparse
 
 from gensim.models.word2vec import Word2Vec
 
-import platforms, NetCreator
 
-embedding_size = 8
+
 window = 3
 min_count = 1
 initial_lr = 0.0001
@@ -49,13 +48,13 @@ def train_model(model_path, emb_dim=8, window=3, min_count=1, initial_lr=0.0001)
     model.save(model_path)
     return model
 
-def getModel(path):
+def getModel(path, dim=8):
     if (os.path.exists(path)):
         model = Word2Vec.load(path)
         return model
     else:
         print('未找到预训练模型，准备记载数据并重新训练...')
-        return train_model(path, embedding_size, window, min_count, initial_lr)
+        return train_model(path, dim, window, min_count, initial_lr)
 
 
 def get_embedding(names):
@@ -67,4 +66,15 @@ def get_embedding(names):
         raise 'No W2V model found in specific dir {}'.format(path)
 
 if __name__ == '__main__':
-    getModel(os.path.join(os.getcwd(), 'data', 'operator_embedding8.ebd') )
+    parser = argparse.ArgumentParser(description='Generate Embeddings for the operator')
+    parser.add_argument('emb_dim', metavar='dimension', type=int, nargs='+',
+                help='network paradigms: [`batch`, `streaming`, `linear`].')
+    parser.add_argument('path', metavar='embedding file path', type=str, nargs='+',
+                help='file path')
+    
+    args = parser.parse_args()
+    
+    path= args.path[0]
+    dim= args.emb_dim[0]
+    # os.path.join(os.getcwd(), 'data', 'operator_embedding8.ebd')
+    getModel(path, dim)

@@ -12,8 +12,10 @@ foo@bar:CLIC-GCN$ python NetCreator.py batch local 10
 
 二、训练 GCN 模型
 ```console
-foo@bar:CLIC-GCN$ python train.py
+foo@bar:CLIC-GCN$ python train.py -b 16 -emb 512 -e 4096 -lr 0.0001
 ```
+参数解释参见 `python train.py --help`
+
 该命令运行流程：
 1. 在 `./data/` 目录下搜索 `operator_embedding.ebd` 文件，即预训练好的 operator_embedding 模型，若不存在则重新合成数据并训练；
 2. 合成后的 Logical Plan 数据保存在 `./data/Logical Plans/generated` 目录下，每个文件表示一个 Logical Plan，以 Pickle 序列化的格式保存；

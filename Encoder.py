@@ -14,7 +14,7 @@ class OperatorEncoder:
 
         self.onehot_encoder = preprocessing.OneHotEncoder(sparse=False)
         self.onehot_encoder.fit([[o.name] for o in operators.all_opts])
-        p = os.path.join(os.getcwd(), 'data', 'operator_embedding.ebd') 
+        p = os.path.join(os.getcwd(), 'data', 'operator_embedding8.ebd') 
         self.embedding_model = OperatorEmbedding.getModel(p)
 
 

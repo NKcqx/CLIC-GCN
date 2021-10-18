@@ -186,9 +186,9 @@ def completeNet(Net=None, concat_head='*', concat_tail='*', level=1, paradigm='*
 
 def create():
     parser = argparse.ArgumentParser(description='Generate all kinds of Networks.')
-    parser.add_argument('paradigm', metavar='paradigm', type=str, nargs='+',
+    parser.add_argument('paradigm', metavar='paradigm', type=str, nargs='+', choices=['batch', 'linear', 'streaming'],
                 help='network paradigms: [`batch`, `streaming`, `linear`].')
-    parser.add_argument('size', metavar='size', type=str, nargs='+',
+    parser.add_argument('size', metavar='size', type=str, nargs='+', choices=['local', 'small', 'medium', 'large'],
                 help='network size: [`local`, `small`, `medium`, `large`].')
     parser.add_argument('amount', metavar='amount', type=int, nargs='+',
                 help='the number of generated networks in total')
@@ -199,7 +199,6 @@ def create():
     size= args.size[0]
     amount = args.amount[0]
     if(paradigm =='linear'):
-
         loop = {
             "local": 0,
             "small": random.randint(0, 100),
