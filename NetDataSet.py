@@ -1,11 +1,8 @@
-from genericpath import isdir
-from logging import debug
 import os
 import os.path as osp
-from networkx.algorithms.tree.operations import join
-
 import torch
 import networkx as nx
+import numpy as np
 
 from torch_geometric.data import InMemoryDataset, Data, DataLoader,Dataset
 from sklearn.preprocessing import LabelEncoder
@@ -44,6 +41,7 @@ class NetDataset(InMemoryDataset):
                 x, y = [], []
                 sources, targets = [], []
                 idx = 0
+                # context = np.array(Context.context_vec)
                 for n in g.nodes:
                     node_map[n] = idx
                     idx+=1

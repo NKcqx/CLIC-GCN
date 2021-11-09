@@ -8,7 +8,10 @@ class Platform:
         self.scale = args.get('scale', ['local', 'small', 'medium', 'large'])
         self.args = args # 版本号/是否分布式
 
-
+all_plts = [ # 做实验临时的，因为 HiBench 里只有这两个平台
+    Platform("spark", paradigms=["batch", "streaming", "sql", "linear", "graph"], scale=['medium', 'large']),
+    Platform("hadoop", paradigms=["batch"], scale=['medium', 'large']),
+]
 all_plt = [
 Platform("spark", paradigms=["batch", "streaming", "sql", "linear", "graph"], scale=['medium', 'large']),
 Platform("storm", paradigms=["batch", "streaming"], scale=['medium', 'large']),

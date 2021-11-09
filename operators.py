@@ -59,7 +59,6 @@ Operator("collect", ["batch", "streaming"], kind=OperatorKind.ACTION),
 
 Operator("subtract", ["batch", "streaming", "linear"], kind=OperatorKind.CALCULATOR, num_input=2), # 从第一个数据中提取第二个不存在的元素（差集）
 
-Operator('broadcast', ['batch'], kind=OperatorKind.DISPATCHER),
 
 Operator("concat", ['batch', 'sql', 'nosql', 'linear'],  kind=OperatorKind.CALCULATOR, num_output=2),
 Operator("sample", ["batch", "streaming", "linear", "graph"], kind=OperatorKind.CALCULATOR),

@@ -161,7 +161,8 @@ def completeNet(Net=None, concat_head='*', concat_tail='*', level=1, paradigm='*
         for h in heads:
             if(h.num_input != 0 and  h.num_output != 0):
                 Net['head'].remove(h) # 这个h将要被替换为新网络的head，所以先删除它
-                sub_platform = random.choice(list(platforms.plts_with_paradigm[paradigm]))
+                # 0.8 用于控制更换平台的概率，值越大越容易保持原有平台
+                sub_platform = random.choice(list(platforms.plts_with_paradigm[paradigm])) if random.random() > 0.8  else platform
                 N = choice([SourceNet, PathNet, UpForkNet], p=p[size])
                 subNet = N(paradigm=paradigm,platform=sub_platform, loop=loop)
                 
@@ -174,7 +175,8 @@ def completeNet(Net=None, concat_head='*', concat_tail='*', level=1, paradigm='*
         tails = Net['tail'] if concat_tail == '*' else concat_tail
         for t in tails:
             Net['tail'].remove(t) # 这个t将要被替换为新网络的tail，所以先删除它
-            sub_platform = random.choice(list(platforms.plts_with_paradigm[paradigm]))
+            # 0.8 用于控制更换平台的概率，值越大越容易保持原有平台
+            sub_platform = random.choice(list(platforms.plts_with_paradigm[paradigm])) if random.random() > 0.8  else platform
             N = choice([ActionNet, PathNet, DownForkNet], p=p[size])
             subNet = N(paradigm=paradigm,platform=sub_platform, loop=loop)
 
@@ -186,18 +188,20 @@ def completeNet(Net=None, concat_head='*', concat_tail='*', level=1, paradigm='*
 
 def create():
     parser = argparse.ArgumentParser(description='Generate all kinds of Networks.')
-    parser.add_argument('paradigm', metavar='paradigm', type=str, nargs='+', choices=['batch', 'linear', 'streaming'],
+    parser.add_argument('-p', '--paradigm',  type=str,  choices=['batch', 'linear', 'streaming'], default='batch',
                 help='network paradigms: [`batch`, `streaming`, `linear`].')
-    parser.add_argument('size', metavar='size', type=str, nargs='+', choices=['local', 'small', 'medium', 'large'],
+
+    parser.add_argument('--size', type=str,  choices=['local', 'small', 'medium', 'large'], default='local',
                 help='network size: [`local`, `small`, `medium`, `large`].')
-    parser.add_argument('amount', metavar='amount', type=int, nargs='+',
+
+    parser.add_argument('--amount',  type=int, default=10,
                 help='the number of generated networks in total')
     
     args = parser.parse_args()
     
-    paradigm= args.paradigm[0]
-    size= args.size[0]
-    amount = args.amount[0]
+    paradigm= args.paradigm
+    size= args.size
+    amount = args.amount
     if(paradigm =='linear'):
         loop = {
             "local": 0,
